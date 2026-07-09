@@ -17,3 +17,18 @@ output "container_url" {
   description = "URL of the Azure Container Instance"
   value       = module.container.container_url
 }
+
+output "vnet_name" {
+  description = "Name of the virtual network"
+  value       = module.network.vnet_name
+}
+
+output "frontend_subnet_id" {
+  description = "ID of the frontend subnet"
+  value       = module.network.frontend_subnet_id
+}
+
+output "backend_subnet_id" {
+  description = "ID of the backend subnet"
+  value       = module.network.backend_subnet_id
+}
