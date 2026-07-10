@@ -18,7 +18,7 @@ resource "azurerm_container_group" "container" {
 
   container {
     name   = "nginx"
-    image = "nginx:1.25"
+    image  = "nginx:1.25"
     cpu    = "0.5"
     memory = "1.5"
 
