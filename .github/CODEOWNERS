@@ -1,0 +1,12 @@
+# Default owner for the whole repository
+* @A-benslimane
+
+# Terraform infrastructure
+/terraform/ @A-benslimane
+
+# GitHub Actions workflows
+/.github/workflows/ @A-benslimane
+
+# Dependabot and repository governance
+/.github/dependabot.yml @A-benslimane
+/.github/CODEOWNERS @A-benslimane
