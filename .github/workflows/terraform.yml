@@ -27,7 +27,7 @@ env:
 
 jobs:
   terraform-ci:
-    name: fmt validate lint plan
+    name: fmt validate lint checkov plan
     runs-on: ubuntu-latest
 
     steps:
@@ -73,6 +73,13 @@ jobs:
         working-directory: ${{ env.TF_WORKING_DIR }}
         run: tflint
 
+      - name: Checkov scan
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          directory: terraform
+          framework: terraform
+          soft_fail: true
+
       - name: Terraform plan
         working-directory: ${{ env.TF_WORKING_DIR }}
         run: |
@@ -101,3 +108,4 @@ jobs:
               repo: context.repo.repo,
               body
             });
+            

@@ -1,0 +1,8 @@
+framework:
+  - terraform
+
+directory:
+  - terraform
+
+quiet: true
+compact: true
