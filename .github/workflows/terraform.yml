@@ -31,7 +31,7 @@ env:
   ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
   TF_VAR_owner: ${{ secrets.AZURE_OWNER }}
-  TF_VAR_resource_group_name: rg-${{ secrets.AZURE_OWNER }}-prf2026
+  TF_VAR_resource_group_name: abenslimaneRG
 
 jobs:
   terraform:
@@ -58,7 +58,8 @@ jobs:
             -backend-config="resource_group_name=${{ secrets.TF_BACKEND_RG }}" \
             -backend-config="storage_account_name=${{ secrets.TF_BACKEND_SA }}" \
             -backend-config="container_name=tfstate" \
-            -backend-config="key=${{ secrets.AZURE_OWNER }}.terraform.tfstate"
+            -backend-config="key=${{ secrets.AZURE_OWNER }}.terraform.tfstate" \
+            -backend-config="access_key=${{ secrets.TF_BACKEND_ACCESS_KEY }}"
 
       - name: Terraform fmt
         working-directory: ${{ env.TF_WORKING_DIR }}
