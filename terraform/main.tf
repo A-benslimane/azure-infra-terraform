@@ -3,8 +3,8 @@ data "azurerm_resource_group" "rg" {
 }
 
 data "azurerm_service_plan" "shared" {
-  name                = "plan-npr-prf2026"
-  resource_group_name = "rg-shared-prf2026"
+  name                = var.shared_plan_name
+  resource_group_name = var.shared_rg_name
 }
 
 locals {

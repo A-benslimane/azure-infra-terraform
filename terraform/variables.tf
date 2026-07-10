@@ -13,12 +13,6 @@ variable "resource_group_name" {
   type        = string
 }
 
-variable "location" {
-  description = "Azure region for resources"
-  type        = string
-  default     = "francecentral"
-}
-
 variable "shared_rg_name" {
   description = "Resource Group containing the shared App Service plan"
   type        = string
