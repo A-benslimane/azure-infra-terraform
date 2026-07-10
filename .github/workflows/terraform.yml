@@ -27,7 +27,7 @@ env:
 
 jobs:
   terraform-ci:
-    name: fmt validate lint plan
+    name: fmt validate lint checkov plan
     runs-on: ubuntu-latest
 
     steps:
@@ -41,13 +41,15 @@ jobs:
         uses: terraform-linters/setup-tflint@v4
 
       - name: Azure login with OIDC
+        if: github.actor != 'dependabot[bot]'
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: Terraform init
+      - name: Terraform init with backend
+        if: github.actor != 'dependabot[bot]'
         working-directory: ${{ env.TF_WORKING_DIR }}
         run: |
           terraform init \
@@ -56,6 +58,11 @@ jobs:
             -backend-config="container_name=tfstate" \
             -backend-config="key=abenslimaneRG.terraform.tfstate" \
             -backend-config="access_key=${{ secrets.TF_BACKEND_ACCESS_KEY }}"
+
+      - name: Terraform init without backend for Dependabot
+        if: github.actor == 'dependabot[bot]'
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform init -backend=false
 
       - name: Terraform fmt
         working-directory: ${{ env.TF_WORKING_DIR }}
@@ -73,14 +80,22 @@ jobs:
         working-directory: ${{ env.TF_WORKING_DIR }}
         run: tflint
 
+      - name: Checkov scan
+        uses: bridgecrewio/checkov-action@v12
+        with:
+          directory: terraform
+          framework: terraform
+          soft_fail: true
+
       - name: Terraform plan
+        if: github.actor != 'dependabot[bot]'
         working-directory: ${{ env.TF_WORKING_DIR }}
         run: |
           terraform plan -input=false -no-color -out=tfplan
           terraform show -no-color tfplan > plan.txt
 
       - name: Comment plan on Pull Request
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && github.actor != 'dependabot[bot]'
         uses: actions/github-script@v7
         with:
           script: |
@@ -101,3 +116,4 @@ jobs:
               repo: context.repo.repo,
               body
             });
+            
